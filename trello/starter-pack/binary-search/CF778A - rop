@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MAX = 200010;
+int cantUse[MAX];
+int toBlock[MAX];
+char c[MAX];
+char need[MAX];
+int n, m;
+
+bool check(int idx) {
+	for(int i = 0; i < idx; ++i)cantUse[toBlock[i]] = 1;
+	int idNeed = 0, idC = 0;
+	while(idNeed < m && idC < n){
+		if(cantUse[idC] || c[idC] != need[idNeed])idC++;
+		else ++idC, ++idNeed;
+	}
+	for(int i = 0; i < idx; ++i)cantUse[toBlock[i]] = 0;
+	return idNeed == m;
+}
+int main() {
+	scanf("%s", c);
+	scanf("%s", need);
+	n = strlen(c);
+	m = strlen(need);
+	for(int i = 0; i < n; ++i){
+		scanf("%d", toBlock+i);
+		--toBlock[i];
+	}
+	int lf = 0, rg = n-1;
+	int ans = -1;
+	while(lf <= rg) {
+		int md = (lf+rg)/2;
+		if(check(md)) {
+			ans = max(ans, md);
+			lf = md+1;
+		}else rg = md-1;
+	}
+	printf("%d\n", ans);
+	return 0;
+}
